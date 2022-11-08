@@ -1,0 +1,17 @@
+type Query {
+  jobs: [Job!]
+  # it can return empty array or a array with Job object but not null( ! = not null)
+  greeting: String
+}
+type Company {
+  id: ID!
+  name: String!
+}
+
+type Job {
+  # Custom scalar type
+  id: ID!
+  title: String!
+  description: String
+  company: Company!
+}
