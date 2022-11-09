@@ -3,6 +3,12 @@ export const resolvers = {
   Query: {
     greeting: () => "Hello",
     jobs: () => Job.findAll(),
+    job: (_root, args) => {
+      console.log(args, "it will display the argumwnts  passed to it"); //eg: args={id:"1"}
+      return Job.findById(args.id);
+    },
+    companies: () => Company.findAll(),
+    company: (_root, { id }) => Company.findById(id),
     // jobs: async () => [
     //   {
     //     id: "id1",
@@ -19,5 +25,8 @@ export const resolvers = {
   },
   Job: {
     company: (job) => Company.findById(job.companyId),
+  },
+  Company: {
+    jobs: (company) => Job.findAll((job) => job.companyId === company.id),
   },
 };

@@ -14,3 +14,8 @@ ID
 
 if a field is missing it is undefined in js, null in grapql
 we can return fields other than the schema in resolver but graphql neglets it
+string must br enclosed in double quotes in graphql. we cannnot use single quote
+
+graphql varaiable name should start with $ sign
+
+we can traverve as many times we want

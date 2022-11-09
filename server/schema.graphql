@@ -1,11 +1,16 @@
 type Query {
+  job(id: ID!): Job
   jobs: [Job!]
+  company(id: ID!): Company
+  companies: [Company!]
   # it can return empty array or a array with Job object but not null( ! = not null)
   greeting: String
 }
 type Company {
   id: ID!
   name: String!
+  description: String
+  jobs: [Job!]
 }
 
 type Job {
