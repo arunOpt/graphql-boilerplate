@@ -6,6 +6,12 @@ type Query {
   # it can return empty array or a array with Job object but not null( ! = not null)
   greeting: String
 }
+type Mutation {
+  # createJob(title: String!, description: String, companyId: ID!): Job
+  createJob(input: CreateJobInput!): Job
+  deleteJob(id: ID!): Job
+  updateJob(input: UpdateJobInput): Job
+}
 type Company {
   id: ID!
   name: String!
@@ -19,4 +25,16 @@ type Job {
   title: String!
   description: String
   company: Company!
+}
+input CreateJobInput {
+  title: String
+  description: String
+  companyId: ID!
+}
+
+input UpdateJobInput {
+  id: ID!
+  title: String
+  description: String
+  companyId: ID!
 }

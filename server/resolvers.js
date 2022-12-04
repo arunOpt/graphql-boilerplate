@@ -23,6 +23,13 @@ export const resolvers = {
     //   },
     // ],
   },
+  Mutation: {
+    // createJob: (_root, { title, companyId, description }) =>
+    //   Job.create({ title, companyId, description }),
+    createJob: (_root, { input }) => Job.create(input),
+    deleteJob: (_root, { id }) => Job.delete(id),
+    updateJob: (_root, { input }) => Job.update(input),
+  },
   Job: {
     company: (job) => Company.findById(job.companyId),
   },

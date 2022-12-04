@@ -35,7 +35,19 @@ const getJob = async (id) => {
   const { job } = await request(GRAPHQL_URL, query, varaibles); //data.jobs or {jobs}
   return job;
 };
-
+const createJob = async (input) => {
+  const query = gql`
+    mutation Mutation($input: CreateJobInput!) {
+      job: createJob(input: $input) {
+        # job: is alias for createjob return data
+        id
+      }
+    }
+  `;
+  const varaibles = { input }; //js variable can be passed to graphql by passing it as a third argument to request
+  const { job } = await request(GRAPHQL_URL, query, varaibles); //data.jobs or {jobs}
+  return job;
+};
 const getCompany = async (id) => {
   const query = gql`
     query CompanyQuery($id: ID!) {
@@ -67,4 +79,4 @@ const getCompanies = async () => {
   const { companies } = await request(GRAPHQL_URL, query); //data.jobs or {jobs}
   return companies;
 };
-export { getJobs, getJob, getCompany, getCompanies };
+export { getJobs, getJob, createJob, getCompany, getCompanies };
