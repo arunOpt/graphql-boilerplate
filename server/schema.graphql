@@ -29,12 +29,10 @@ type Job {
 input CreateJobInput {
   title: String
   description: String
-  companyId: ID!
 }
 
 input UpdateJobInput {
   id: ID!
   title: String
   description: String
-  companyId: ID!
 }

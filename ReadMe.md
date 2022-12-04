@@ -19,3 +19,7 @@ string must br enclosed in double quotes in graphql. we cannnot use single quote
 graphql varaiable name should start with $ sign
 
 we can traverve as many times we want
+
+Login
+alice@facegle.io
+alice123

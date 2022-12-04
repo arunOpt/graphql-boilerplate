@@ -33,7 +33,18 @@ app.post("/login", async (req, res) => {
 });
 
 const typeDefs = await readFile("./schema.graphql", "utf-8");
-const appoloServer = new ApolloServer({ typeDefs, resolvers });
+const context = async ({ req }) => {
+  if (req?.auth) {
+    const user = await User.findById(req.auth.sub);
+    return { user };
+  }
+  return {};
+
+  //  auth: req.auth, method: req.method }
+};
+//using context we can send some data specific to a request and use it inside any data as a third arg in resolver
+//
+const appoloServer = new ApolloServer({ typeDefs, resolvers, context });
 await appoloServer.start();
 appoloServer.applyMiddleware({ app, path: "/graphql" }); //default "./graphql"
 
