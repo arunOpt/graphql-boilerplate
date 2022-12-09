@@ -39,7 +39,7 @@ export const useCompany = (id) => {
 };
 export const useCreateJob = () => {
   const [mutate, { loading, error }] = useMutation(CREATE_JOB_MUTATION);
-  const createJob = async (title, description) => {
+  const createJob = async ({ title, description }) => {
     const {
       data: { job },
     } = await mutate({
