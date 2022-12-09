@@ -2,8 +2,8 @@ import cors from "cors";
 import express from "express";
 import { expressjwt } from "express-jwt";
 import jwt from "jsonwebtoken";
-import { User } from "./db.js";
-
+// import { User } from "./db.js";
+import { createCompanyLoader, db } from "./db.js";
 import { resolvers } from "./resolvers.js";
 import { ApolloServer } from "apollo-server-express";
 import { readFile } from "fs/promises";
@@ -23,7 +23,8 @@ app.use(
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne((user) => user.email === email);
+  const user = await db.select().from("users").where("email", email).first();
+  // const user = await User.findOne((user) => user.email === email);
   if (user && user.password === password) {
     const token = jwt.sign({ sub: user.id }, JWT_SECRET);
     res.json({ token });
@@ -34,11 +35,17 @@ app.post("/login", async (req, res) => {
 
 const typeDefs = await readFile("./schema.graphql", "utf-8");
 const context = async ({ req }) => {
+  const companyLoader = createCompanyLoader();
   if (req?.auth) {
-    const user = await User.findById(req.auth.sub);
-    return { user };
+    // const user = await User.findById(req.auth.sub);
+    const user = await db
+      .select()
+      .from("users")
+      .where("id", req.auth.sub)
+      .first();
+    return { user, companyLoader };
   }
-  return {};
+  return { companyLoader };
 
   //  auth: req.auth, method: req.method }
 };

@@ -23,3 +23,7 @@ we can traverve as many times we want
 Login
 alice@facegle.io
 alice123
+
+server/data/init.sql contains initial data
+sqlite> SELECT job.id, job.title company.id, company.name FROM jobs job JOIN companies company ON company.id= job.companyid
+dataloader for caching and batching

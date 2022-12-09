@@ -1,4 +1,7 @@
-import { Company, Job } from "./db.js";
+// import { Company, Job } from "./db.js";
+
+import { nanoid } from "nanoid";
+import { companyLoader, db } from "./db.js";
 const rejectIf = (condition) => {
   if (condition) {
     throw new Error("Unauthourised");
@@ -7,13 +10,20 @@ const rejectIf = (condition) => {
 export const resolvers = {
   Query: {
     greeting: () => "Hello",
-    jobs: () => Job.findAll(),
-    job: (_root, args) => {
+    jobs: async () => {
+      return await db.select().from("jobs");
+      // Job.findAll();
+    },
+    job: async (_root, args) => {
       console.log(args, "it will display the argumwnts  passed to it"); //eg: args={id:"1"}
-      return Job.findById(args.id);
+      return await db.select().from("jobs").where("id", id).first();
+      // return Job.findById(args.id);
     },
     companies: () => Company.findAll(),
-    company: (_root, { id }) => Company.findById(id),
+    company: async (_root, { id }) => {
+      return await db.select().from("companies").where("id", id).first();
+      // Company.findById(id),
+    },
     // jobs: async () => [
     //   {
     //     id: "id1",
@@ -31,11 +41,18 @@ export const resolvers = {
   Mutation: {
     // createJob: (_root, { title, companyId, description }) =>
     //   Job.create({ title, companyId, description }),
-    createJob: (_root, { input }, context) => {
+    createJob: async (_root, { input }, context) => {
       const { user } = context;
       rejectIf(!user);
+      const job = {
+        id: nanoid(),
+        companyId: user.companyId,
+        ...input,
+      };
+      await db.insert(job).into("jobs");
+      return job;
       // return Job.create(input);
-      return Job.create({ ...input, companyId: user.companyId });
+      // return Job.create({ ...input, companyId: user.companyId });
     },
     deleteJob: async (_root, { id }, context) => {
       const { user } = context;
@@ -55,9 +72,25 @@ export const resolvers = {
     },
   },
   Job: {
-    company: (job) => Company.findById(job.companyId),
+    company: async (job, _args, context) => {
+      const { companyLoader } = context;
+      return await companyLoader.load(job.companyId);
+      // return await db
+      //   .select()
+      //   .from("companies")
+      //   .where("id", job.companyId)
+      //   .first();
+      // Company.findById(job.companyId),
+    },
   },
   Company: {
-    jobs: (company) => Job.findAll((job) => job.companyId === company.id),
+    jobs: async (company) => {
+      return await db
+        .select()
+        .from("companies")
+        .where("id", job.companyId)
+        .first();
+      // Job.findAll((job) => job.companyId === company.id),
+    },
   },
 };
